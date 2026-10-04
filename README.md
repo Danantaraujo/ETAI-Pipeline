@@ -26,6 +26,7 @@ Updates
 - Improved data cleaning with invalid values, placeholders, duplicates and missing-value handling.
 - Preprocessing is now included inside the model pipeline.
 - Replaced the single train/test split with 5-fold stratified cross-validation.
+- Comparing Models.
 
 Model Comparison
 The models were compared using the same 5-fold stratified cross-validation setup, with the same preprocessing pipeline and random state.
