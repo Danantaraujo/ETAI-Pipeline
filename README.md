@@ -26,3 +26,14 @@ Updates
 - Improved data cleaning with invalid values, placeholders, duplicates and missing-value handling.
 - Preprocessing is now included inside the model pipeline.
 - Replaced the single train/test split with 5-fold stratified cross-validation.
+
+Model Comparison
+The models were compared using the same 5-fold stratified cross-validation setup, with the same preprocessing pipeline and random state.
+Model	Train Accuracy	Validation Accuracy	Validation Std	Train–Validation Gap	F1 Class 1
+Logistic Regression	0.675	0.672	0.013	0.003	0.58
+Random Forest	0.733	0.650	0.018	0.083	0.60
+Decision Tree	0.695	0.610	0.018	0.085	0.54
+
+
+For now, I am comparing the models mainly using the mean validation accuracy, its standard deviation, and the train–validation gap. I am not completely sure whether this is the best model comparison approach for this project, so this should be confirmed with the professor.
+Logistic Regression currently shows the best overall cross-validation performance. Random Forest still requires hyperparameter tuning, so its current results should be considered preliminary.
