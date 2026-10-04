@@ -28,7 +28,8 @@ Updates
 - Replaced the single train/test split with 5-fold stratified cross-validation.
 - Comparing Models.
 
-Model Comparison
+### Model Comparison
+
 The models were compared using the same 5-fold stratified cross-validation setup, with the same preprocessing pipeline and random state.
 
 
