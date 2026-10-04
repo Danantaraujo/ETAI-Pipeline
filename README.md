@@ -29,10 +29,13 @@ Updates
 
 Model Comparison
 The models were compared using the same 5-fold stratified cross-validation setup, with the same preprocessing pipeline and random state.
-Model	Train Accuracy	Validation Accuracy	Validation Std	Train–Validation Gap	F1 Class 1
-Logistic Regression	0.675	0.672	0.013	0.003	0.58
-Random Forest	0.733	0.650	0.018	0.083	0.60
-Decision Tree	0.695	0.610	0.018	0.085	0.54
+
+
+| Model | Train Accuracy | Test Accuracy | Macro F1 | Train-Test Gap |
+|---|---:|---:|---:|---:|
+| Logistic Regression | 67.5% | 67.2% | 0.66 | 0.3% |
+| Decision Tree | 69.5% | 61.0% | 0.60 | 8.5% |
+| Random Forest | 73.3% | 65.0% | 0.64 | 8.3% |
 
 
 For now, I am comparing the models mainly using the mean validation accuracy, its standard deviation, and the train–validation gap. I am not completely sure whether this is the best model comparison approach for this project, so this should be confirmed with the professor.
