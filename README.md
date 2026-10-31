@@ -71,7 +71,7 @@ The development data were evaluated with **five stratified cross-validation fold
 
 ## B. Experimental results and comparison
 
-The batch runner completed **16 successful executions**: nine default configurations and seven tuned configurations. Dummy and Logistic Regression were evaluated without tuning in this batch because no corresponding Week 7 search spaces were configured. The scoreboard contained one additional, earlier Dummy entry, which was excluded from this comparison to avoid double counting.
+The batch runner completed **16 successful executions**: nine default configurations and seven tuned configurations. Dummy and Logistic Regression were evaluated without tuning.
 
 ### ROC-AUC results
 
@@ -113,8 +113,4 @@ ROC-AUC measures how well a classifier ranks positive cases above negative cases
 
 As a complementary addition to the Week 7 pipeline, we included **`run_all_week7.py`** to run the complete model benchmark in a single command instead of launching each experiment manually. The script executes the nine default model configurations and the seven models with configured hyperparameter search spaces, using the same evaluation settings and **30 Optuna trials per tuning search**. It records each run in the scoreboard (`results/runs.csv`), saves execution logs and a status summary under `results/week7_logs/`, and restores the original `config.yaml` after the batch finishes. This makes the experiments easier to reproduce and compare while leaving the existing single-model workflow in `main.py` available.
 
-### Reproducing the results and figures
 
-Run `python run_all_week7.py` from the repository root to execute the benchmark, then run `python plot_model_dashboard.py` to generate the plots from `results/runs.csv`. The benchmark's execution status is recorded in `results/week7_logs/execution_status.csv`, and the chart script writes figures into `results/plots/`. Because `results/` is ignored by Git, the two PNG files must be explicitly added with `git add -f` for the figures to display on GitHub.
-
-**Scope of these conclusions:** The table and figures are based on the recorded cross-validation ROC-AUC values in `runs.csv`, not on the untouched hold-out test set. No precision–recall or ROC curves are presented because their construction requires per-observation out-of-fold or held-out predicted probabilities and true labels, not just aggregate fold scores. Likewise, the remaining seven metrics and group fairness statistics require the corresponding evaluation outputs for a quantitative comparison.
