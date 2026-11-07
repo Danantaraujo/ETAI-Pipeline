@@ -105,12 +105,56 @@ Values are **mean ± standard deviation across the five evaluation folds**. A hi
 
 Hyperparameter tuning improved the mean ROC-AUC of all seven tuned models. The largest gains were seen for **Decision Tree (+0.1129)**, **Random Forest (+0.0437)**, and **Oblique Random Forest (+0.0411)**. By contrast, Gradient Boosting improved by only **+0.0007**, suggesting that its default configuration was already competitive for this dataset. Logistic Regression, without tuning, achieved **0.7186 ± 0.0139**, making it a useful simpler baseline. The Dummy classifier scored **0.5000**, consistent with chance-level ranking performance.
 
-### Why ROC-AUC was selected
-
-ROC-AUC measures how well a classifier ranks positive cases above negative cases across possible decision thresholds, making it more informative than accuracy alone when the operating threshold has not yet been fixed. It is also useful for comparing models without choosing a particular balance between false positives and false negatives in advance. **However, ROC-AUC does not capture calibration, the costs of different errors, or disparities between demographic groups**, so average precision, threshold-dependent metrics, and fairness diagnostics should also be reviewed before deployment.
 
 ### Complementary batch execution script
 
-As a complementary addition to the Week 7 pipeline, we included **`run_all_week7.py`** to run the complete model benchmark in a single command instead of launching each experiment manually. The script executes the nine default model configurations and the seven models with configured hyperparameter search spaces, using the same evaluation settings and **30 Optuna trials per tuning search**. It records each run in the scoreboard (`results/runs.csv`), saves execution logs and a status summary under `results/week7_logs/`, and restores the original `config.yaml` after the batch finishes. This makes the experiments easier to reproduce and compare while leaving the existing single-model workflow in `main.py` available.
+As a complementary addition to the Week 7 pipeline, I included **`run_all_week7.py`** to run the complete model benchmark in a single command instead of launching each experiment manually. The script executes the nine default model configurations and the seven models with configured hyperparameter search spaces, using the same evaluation settings and **30 Optuna trials per tuning search**. It records each run in the scoreboard (`results/runs.csv`), saves execution logs and a status summary under `results/week7_logs/`, and restores the original `config.yaml` after the batch finishes. This makes the experiments easier to reproduce and compare while leaving the existing single-model workflow in `main.py` available.
+
+
+
+# Week 8 progress
+
+## Feature Selection and XGBoost
+This week, the pipeline was extended by introducing XGBoost and an optional feature selection step.
+
+Feature selection was implemented using a voting-based approach combining three methods: Random Forest feature importance, Gradient Boosting feature importance, and L1-regularized Logistic Regression coefficients. Features are retained according to the minimum number of votes, which can also be optimized through Optuna.
+
+The existing evaluation methodology was maintained, using 5-fold stratified cross-validation and nested cross-validation with 30 Optuna trials per tuning search. The final 20% hold-out test set remained untouched.
+
+## Evaluation Metrics
+
+Three complementary metrics were selected to compare the XGBoost configurations:
+
+- **ROC-AUC:** Evaluates the model's ability to distinguish between individuals who reoffend and those who do not, independently of the classification threshold. It remains the primary metric for hyperparameter optimization.
+
+- **Recall:** Measures the proportion of actual reoffenders correctly identified by the model. It is relevant for understanding false negatives, although false positives must also be considered given the potential consequences of recidivism predictions.
+
+- **Average Precision:** Summarizes the Precision–Recall curve, capturing the trade-off between identifying positive cases and limiting false positives across classification thresholds. It complements ROC-AUC and is especially informative when class distributions are imbalanced.
+
+Together, these metrics provide a broader evaluation of predictive performance than last week.
+
+
+The following table compares all evaluated models using three complementary metrics: ROC-AUC, Recall, and Average Precision. ROC-AUC measures discrimination across classification thresholds, Recall evaluates the identification of actual positive cases, and Average Precision summarizes the precision-recall trade-off. Results are reported as mean ± standard deviation across five cross-validation folds.
+
+| Model | Feature Selection | ROC-AUC | Recall | Average Precision |
+|---|---|---|---|---|
+| XGBoost (tuned) | Disabled | **0.7284** | 0.5598 | 0.6906 |
+| Gradient Boosting (tuned) | Disabled | 0.7274 | 0.5575 | **0.6933** |
+| HistGradientBoosting (tuned) | Disabled | 0.7271 | **0.6382** | 0.6921 |
+| AdaBoost (tuned) | Disabled | 0.7264 | 0.5629 | 0.6883 |
+| Oblique Random Forest (tuned) | Disabled | 0.7264 | 0.5644 | 0.6868 |
+| Random Forest (tuned) | Disabled | 0.7263 | 0.6344 | 0.6889 |
+| XGBoost (tuned) | Enabled | 0.7255 | 0.5613 | 0.6899 |
+| Logistic Regression | Disabled | 0.7186 | 0.6363 | 0.6732 |
+| Decision Tree (tuned) | Disabled | 0.7166 | 0.6140 | 0.6693 |
+| Naive Bayes (tuned) | Disabled | 0.7052 | 0.2445 | 0.6558 |
+| Dummy | Disabled | 0.5000 | 0.0000 | 0.4507 |
+
+### Results and Interpretation
+
+Tuned XGBoost without feature selection achieved the highest ROC-AUC (0.7284), while Gradient Boosting obtained the highest Average Precision (0.6933) and Histogram Gradient Boosting the highest Recall (0.6382). The small differences in ROC-AUC among the leading models suggest that no single model is clearly superior across all evaluation criteria.
+
+Enabling feature selection slightly reduced XGBoost's ROC-AUC (0.7284 to 0.7255) and Average Precision (0.6906 to 0.6899), while Recall increased marginally (0.5598 to 0.5613). Therefore, feature selection did not provide a meaningful predictive improvement in this experiment.
+
 
 
