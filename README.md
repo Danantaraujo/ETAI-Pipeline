@@ -114,6 +114,13 @@ As a complementary addition to the Week 7 pipeline, I included **`run_all_week7.
 
 # Week 8 progress
 
+## Pipeline progress
+
+| Week | Progress |
+|---|---|
+| W8 | Integrated XGBoost and an optional voting-based feature selector into the classification pipeline; evaluated tuned XGBoost with selection enabled and disabled using nested cross-validation. |
+
+
 ## Feature Selection and XGBoost
 This week, the pipeline was extended by introducing XGBoost and an optional feature selection step.
 
@@ -156,5 +163,11 @@ Tuned XGBoost without feature selection achieved the highest ROC-AUC (0.7284), w
 
 Enabling feature selection slightly reduced XGBoost's ROC-AUC (0.7284 to 0.7255) and Average Precision (0.6906 to 0.6899), while Recall increased marginally (0.5598 to 0.5613). Therefore, feature selection did not provide a meaningful predictive improvement in this experiment.
 
+### Corrected paired test and feature selection decision
 
+The tuned XGBoost runs were compared using the five paired outer-fold ROC-AUC scores and the corrected paired t-test (test/train ratio = 1/4). The difference (selection enabled minus disabled) was **-0.00291**, with **t = -0.952**, **p = 0.3952** (two-sided, 4 degrees of freedom). At the 5% significance level, the observed difference is not statistically significant; this does **not** establish statistical equivalence.
+
+**Features kept:** The exact feature names and number retained were not recorded in the supplied `runs.csv`. They must be copied from the final fitted pipeline's `Features kept: ...` output before this part of the assignment is considered complete.
+
+The selected-feature model achieved ROC-AUC 0.7255 versus 0.7284 without selection, while recall was nearly unchanged (0.5613 versus 0.5598). The corrected test did not detect a statistically significant difference, although this is not proof that the smaller model is equally good. I would keep feature selection **off for now**, because no predictive improvement has been demonstrated and the actual reduction in feature count has not yet been documented. I would reconsider enabling it if the retained-feature list confirms a meaningful simplification with comparable validation performance.
 
